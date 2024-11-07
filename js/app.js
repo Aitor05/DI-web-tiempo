@@ -11,7 +11,7 @@ $(document).ready(function () {
             $('#main-content').toggleClass('shifted');
         }
     });
-    
+
     $('#sidebar .nav-link').click(function () {
         $('#sidebar').removeClass('active');
         if ($(window).width() >= 768) {
@@ -100,34 +100,6 @@ $(document).ready(function () {
         });
     }
 
-    function getWeatherByCity(city) {
-        $.ajax({
-            url: `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                displayWeather(data, city);
-            },
-            error: function () {
-                $('#weather-result').html('<p class="text-danger">City not found. Please try again.</p>');
-            }
-        });
-    }
-
-    function getWeatherByLocation(lat, lon) {
-        $.ajax({
-            url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                displayWeather(data, "your location");
-            },
-            error: function () {
-                $('#weather-result').html('<p class="text-danger">Unable to retrieve weather data for your location.</p>');
-            }
-        });
-    }
-
     function displayWeather(data, location) {
         const forecastList = data.list;
         const dailyData = {};
@@ -150,7 +122,7 @@ $(document).ready(function () {
             <h3>Weather in ${location}</h3>
             <p>Current weather: <img src="https://openweathermap.org/img/wn/${currentIcon}.png" alt="weather icon"> ${currentWeatherMain}, ${currentTemp}°C</p>
             <h4>4-Day Forecast:</h4>
-            <div class="forecast-container d-flex justify-content-between">
+            <div class="forecast-container d-flex justify-content-between row">
         `;
 
         // Mostrar previsión de los próximos 4 días en horizontal
@@ -161,7 +133,7 @@ $(document).ready(function () {
             const dayIcon = dayData[0].weather[0].icon;
 
             forecastHtml += `
-                <div class="forecast-day text-center p-2">
+                <div class="forecast-day text-center p-2 col-sm-6 col-lg-3">
                     <p><strong>${date}</strong></p>
                     <p><img src="https://openweathermap.org/img/wn/${dayIcon}.png" alt="weather icon"> ${dayWeather}</p>
                     <p>Avg Temp: ${dayTempAvg}°C</p>
