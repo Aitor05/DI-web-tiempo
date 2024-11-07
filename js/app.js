@@ -11,6 +11,13 @@ $(document).ready(function () {
             $('#main-content').toggleClass('shifted');
         }
     });
+    
+    $('#sidebar .nav-link').click(function () {
+        $('#sidebar').removeClass('active');
+        if ($(window).width() >= 768) {
+            $('#main-content').removeClass('shifted');
+        }
+    });
 
     // Muestra la pantalla principal
     $('#home-link').click(function () {
