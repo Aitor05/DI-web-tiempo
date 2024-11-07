@@ -1,37 +1,90 @@
-@import 'variables';
-@import 'mixins';
-@import 'elements';
+// Variables de color
+$background-color: #d0f0ff;
+$navbar-color: #86d1e4;
+$sidebar-color: #b3e5f2;
+$text-color: #333;
 
+// Estilos de la página
 body {
-  background-color: #d0f0ff;
+    background-color: $background-color;
+    overflow-x: hidden;
 }
+
+// Estilos de la barra de navegación
 .navbar {
-  background-color: #86d1e4;
+    background-color: $navbar-color;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    position: relative;
+    z-index: 2; // Asegura que el navbar esté encima del sidebar
+
+    .burger-btn {
+        font-size: 24px;
+        cursor: pointer;
+        color: $text-color;
+        position: absolute;
+        left: 1rem; // Mantiene el botón a la izquierda
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3; // Más alto que el sidebar, para que no quede oculto
+    }
+
+    .navbar-brand {
+        margin-left: auto; // Envía el título a la derecha
+        font-size: 1.2rem;
+        color: $text-color;
+    }
 }
+
+// Estilos del menú lateral para escritorio
 .sidebar {
-  min-height: 100vh;
-  background-color: #b3e5f2;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 250px;
-  transform: translateX(-250px); /* Inicialmente oculto */
-  transition: transform 0.3s ease;
-  z-index: 1;
+    min-height: 100vh;
+    background-color: $sidebar-color;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    transform: translateX(-250px); // Oculto inicialmente
+    transition: transform 0.3s ease;
+    z-index: 1; // Menor que el burger-btn para que no lo cubra
+
+    &.active {
+        transform: translateX(0); // Muestra el menú en escritorio
+    }
 }
-.sidebar.active {
-  transform: translateX(0); /* Muestra el menú cuando está activo */
+
+// Estilos del menú deslizante en móvil
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: translateY(-100%); // Oculto desde arriba
+        transition: transform 0.3s ease;
+
+        &.active {
+            transform: translateY(0); // Desliza el menú desde arriba
+        }
+    }
 }
+
+// Estilos del contenido principal
 .content {
-  padding: 30px;
-  transition: margin-left 0.3s ease;
-  margin-left: 0;
-}
-.content.shifted {
-  margin-left: 250px; /* Desplaza el contenido cuando el menú está abierto */
-}
-.burger-btn {
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
+    padding: 30px;
+    transition: margin-left 0.3s ease;
+    margin-left: 0;
+
+    &.shifted {
+        margin-left: 250px; // Desplaza el contenido cuando el menú está abierto en escritorio
+    }
+
+    // En móvil, el contenido no se desplaza
+    @media (max-width: 768px) {
+        &.shifted {
+            margin-left: 0;
+        }
+    }
 }

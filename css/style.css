@@ -1,10 +1,30 @@
-@charset "UTF-8";
 body {
   background-color: #d0f0ff;
+  overflow-x: hidden;
 }
 
 .navbar {
   background-color: #86d1e4;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  position: relative;
+  z-index: 2;
+}
+.navbar .burger-btn {
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+}
+.navbar .navbar-brand {
+  margin-left: auto;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .sidebar {
@@ -14,29 +34,40 @@ body {
   top: 0;
   left: 0;
   width: 250px;
-  transform: translateX(-250px); /* Inicialmente oculto */
+  transform: translateX(-250px);
   transition: transform 0.3s ease;
   z-index: 1;
 }
-
 .sidebar.active {
-  transform: translateX(0); /* Muestra el menú cuando está activo */
+  transform: translateX(0);
 }
 
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sidebar.active {
+    transform: translateY(0);
+  }
+}
 .content {
   padding: 30px;
   transition: margin-left 0.3s ease;
   margin-left: 0;
 }
-
 .content.shifted {
-  margin-left: 250px; /* Desplaza el contenido cuando el menú está abierto */
+  margin-left: 250px;
 }
-
-.burger-btn {
-  font-size: 24px;
-  cursor: pointer;
-  color: #333;
+@media (max-width: 768px) {
+  .content.shifted {
+    margin-left: 0;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */
