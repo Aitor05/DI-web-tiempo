@@ -67,7 +67,7 @@ $(document).ready(function () {
 
     function getWeatherByCity(city) {
         $.ajax({
-            url: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`,
+            url: `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -81,7 +81,35 @@ $(document).ready(function () {
 
     function getWeatherByLocation(lat, lon) {
         $.ajax({
-            url: `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`,
+            url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                displayWeather(data, "your location");
+            },
+            error: function () {
+                $('#weather-result').html('<p class="text-danger">Unable to retrieve weather data for your location.</p>');
+            }
+        });
+    }
+
+    function getWeatherByCity(city) {
+        $.ajax({
+            url: `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                displayWeather(data, city);
+            },
+            error: function () {
+                $('#weather-result').html('<p class="text-danger">City not found. Please try again.</p>');
+            }
+        });
+    }
+
+    function getWeatherByLocation(lat, lon) {
+        $.ajax({
+            url: `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -94,13 +122,47 @@ $(document).ready(function () {
     }
 
     function displayWeather(data, location) {
-        const weather = data.weather[0].main;
-        const temp = data.main.temp;
-        const iconCode = data.weather[0].icon;
-        $('#weather-result').html(`
-                <h3>Weather in ${location}</h3>
-                <p><img src="https://openweathermap.org/img/wn/${iconCode}.png" alt="weather icon"> ${weather}</p>
-                <p>Temperature: ${temp}°C</p>
-            `);
+        const forecastList = data.list;
+        const dailyData = {};
+
+        // Agrupar datos por día
+        forecastList.forEach(entry => {
+            const date = new Date(entry.dt * 1000).toLocaleDateString();
+            if (!dailyData[date]) {
+                dailyData[date] = [];
+            }
+            dailyData[date].push(entry);
+        });
+
+        const currentWeather = forecastList[0];
+        const currentIcon = currentWeather.weather[0].icon;
+        const currentWeatherMain = currentWeather.weather[0].main;
+        const currentTemp = currentWeather.main.temp;
+
+        let forecastHtml = `
+            <h3>Weather in ${location}</h3>
+            <p>Current weather: <img src="https://openweathermap.org/img/wn/${currentIcon}.png" alt="weather icon"> ${currentWeatherMain}, ${currentTemp}°C</p>
+            <h4>4-Day Forecast:</h4>
+            <div class="forecast-container d-flex justify-content-between">
+        `;
+
+        // Mostrar previsión de los próximos 4 días en horizontal
+        Object.keys(dailyData).slice(1, 5).forEach(date => {
+            const dayData = dailyData[date];
+            const dayTempAvg = (dayData.reduce((sum, entry) => sum + entry.main.temp, 0) / dayData.length).toFixed(1);
+            const dayWeather = dayData[0].weather[0].main;
+            const dayIcon = dayData[0].weather[0].icon;
+
+            forecastHtml += `
+                <div class="forecast-day text-center p-2">
+                    <p><strong>${date}</strong></p>
+                    <p><img src="https://openweathermap.org/img/wn/${dayIcon}.png" alt="weather icon"> ${dayWeather}</p>
+                    <p>Avg Temp: ${dayTempAvg}°C</p>
+                </div>
+            `;
+        });
+
+        forecastHtml += `</div>`;
+        $('#weather-result').html(forecastHtml);
     }
 });
