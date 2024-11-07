@@ -78,7 +78,7 @@ $(document).ready(function () {
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                displayWeather(data, city);
+                displayWeather(data, data.city.name);
             },
             error: function () {
                 $('#weather-result').html('<p class="text-danger">City not found. Please try again.</p>');
@@ -92,7 +92,7 @@ $(document).ready(function () {
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                displayWeather(data, "your location");
+                displayWeather(data, data.city.name);
             },
             error: function () {
                 $('#weather-result').html('<p class="text-danger">Unable to retrieve weather data for your location.</p>');
