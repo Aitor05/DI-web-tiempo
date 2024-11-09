@@ -1,8 +1,7 @@
 
 $(document).ready(function () {
-    const apiKey = '0046e040a6639c76f2669ab0d5b8adc8'; // Coloca aquí tu clave de OpenWeather
+    const apiKey = '0046e040a6639c76f2669ab0d5b8adc8';
 
-    // Alterna el menú lateral y ajusta el contenido
     $('#burger-btn').click(function () {
         $('#sidebar').toggleClass('active');
 
@@ -33,15 +32,14 @@ $(document).ready(function () {
                 <h2>Search by city:</h2>
                 <form id="weather-form">
                     <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" id="city" class="form-control" placeholder="Enter city name">
+                        <label for="city">City:</label>
+                        <input type="text" id="city" class="form-control my-1" placeholder="Enter city name">
                     </div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
                 <div id="weather-result" class="mt-4"></div>
             `);
 
-        // Manejo del formulario de búsqueda
         $('#weather-form').submit(function (e) {
             e.preventDefault();
             const city = $('#city').val();
@@ -125,7 +123,7 @@ $(document).ready(function () {
             <div class="forecast-container d-flex justify-content-between row">
         `;
 
-        // Mostrar previsión de los próximos 4 días en horizontal
+        // Mostrar previsión de los próximos 4 días
         Object.keys(dailyData).slice(1, 5).forEach(date => {
             const dayData = dailyData[date];
             const dayTempAvg = (dayData.reduce((sum, entry) => sum + entry.main.temp, 0) / dayData.length).toFixed(1);
